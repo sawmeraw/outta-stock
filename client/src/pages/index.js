@@ -1,0 +1,9 @@
+export { default as Products } from "./Products.jsx";
+export { default as Management } from "./Management.jsx";
+export { default as PO } from "./PO.jsx";
+export { default as About } from "./About.jsx";
+export { default as Inventory } from "./Inventory.jsx";
+export { default as EditProduct } from "./EditProduct.jsx";
+export { default as DeletedProducts } from "./DeletedProducts.jsx";
+export { default as CreateProduct } from "./CreateProduct.jsx";
+export { default as Analytics } from "./Analytics.jsx";
