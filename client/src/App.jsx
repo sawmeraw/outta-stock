@@ -17,14 +17,18 @@ import {
   Analytics,
 } from "./pages";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 import "./input.css";
+import Supplier from "./pages/Supplier";
 
 function App() {
   return (
     <>
       <Router>
         <div className="flex flex-col min-h-screen">
+          <ToastContainer position="top-center" />
           <Navbar />
           <main className="flex-grow">
             <Routes>
@@ -39,6 +43,7 @@ function App() {
               <Route path="/inventory/:id" element={<Inventory />} />
               <Route path="/editproduct/:id" element={<EditProduct />} />
               <Route path="/deleted-products" element={<DeletedProducts />} />
+              <Route path="/manage-suppliers" element={<Supplier />} />
               <Route path="/create-product" element={<CreateProduct />} />
               <Route path="/analytics" element={<Analytics />} />
             </Routes>

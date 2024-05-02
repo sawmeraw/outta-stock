@@ -24,6 +24,11 @@ const managementLinks = [
     icon: <MdDelete size={30} />,
     path: "/deleted-products",
   },
+  {
+    title: "Manage Suppliers",
+    icon: <MdCreate size={30} />,
+    path: "/manage-suppliers",
+  },
 ];
 
 const ManagementPage = () => {

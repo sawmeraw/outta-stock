@@ -1,18 +1,36 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { QueryClient, useMutation, useQuery } from "@tanstack/react-query";
+import fetchData from "./customInstance";
+import { toast } from "react-toastify";
 
 const ProductList = () => {
-  const products = [
-    {
-      id: 1,
-      name: "Apple",
-      productId: "APL123",
-      stock: 100,
-      sales: 23,
-      cost: 1.5,
-      rrp: 2.0,
+  const queryClient = new QueryClient();
+  const navigate = useNavigate();
+  const { isPending, data, isError } = useQuery({
+    queryKey: ["products"],
+    queryFn: () => fetchData.get("/products"),
+  });
+  const products = data?.data;
+
+  const { mutate: deleteProduct, isLoading } = useMutation({
+    mutationFn: (id) => fetchData.delete(`/deleteproduct/${id}`),
+    onSuccess: () => {
+      toast.success("Product deleted successfully", {
+        autoClose: 1500,
+      });
+      queryClient.invalidateQueries(["products"]);
     },
-  ];
+    onError: () => {
+      toast.error("Error deleting product");
+    },
+  });
+
+  const onDelete = (id) => {
+    deleteProduct(id);
+  };
+
+  //Remaining: To Add loading and error state renders
 
   return (
     <div className="max-w-4xl mx-auto mt-8">
@@ -33,37 +51,38 @@ const ProductList = () => {
           </tr>
         </thead>
         <tbody>
-          {products.map((product) => (
-            <tr key={product.id}>
-              <td className="border px-4 py-2 ">
-                <Link
-                  to={`/editproduct/${product.productId}`}
-                  className="hover:underline hover:text-blue-500"
-                >
-                  {product.name}
-                </Link>
-              </td>
-              <td className="border px-4 py-2">{product.productId}</td>
-              <td className="border px-4 py-2">{product.stock}</td>
-              <td className="border px-4 py-2">{product.sales}</td>
-              <td className="border px-4 py-2">${product.cost}</td>
-              <td className="border px-4 py-2">${product.rrp}</td>
-              <td className="border px-4 py-2 flex flex-col items-center">
-                <Link
-                  to={`/inventory/${product.productId}`}
-                  className="text-white px-2 py-1 text-sm bg-blue-500 hover:bg-blue-600 rounded-md"
-                >
-                  Inventory
-                </Link>
-                <button
-                  onClick={() => onDelete(product.productId)}
-                  className="text-white mt-2 bg-red-800 px-2 py-1 text-sm rounded-md hover:bg-red-900"
-                >
-                  Delete
-                </button>
-              </td>
-            </tr>
-          ))}
+          {products &&
+            products.map((product) => (
+              <tr key={product.productID}>
+                <td className="border px-4 py-2 ">
+                  <Link
+                    to={`/editproduct/${product.productID}`}
+                    className="hover:underline hover:text-blue-500"
+                  >
+                    {product.productName}
+                  </Link>
+                </td>
+                <td className="border px-4 py-2">{product.productID}</td>
+                <td className="border px-4 py-2">{product.stock}</td>
+                <td className="border px-4 py-2">{product.sold}</td>
+                <td className="border px-4 py-2">${product.costPrice}</td>
+                <td className="border px-4 py-2">${product.retailPrice}</td>
+                <td className="border px-4 py-2 flex flex-col items-center">
+                  <Link
+                    to={`/inventory/${product.productID}`}
+                    className="text-white px-2 py-1 text-sm bg-blue-500 hover:bg-blue-600 rounded-md"
+                  >
+                    Inventory
+                  </Link>
+                  <button
+                    onClick={() => onDelete(product.productID)}
+                    className="text-white mt-2 bg-red-800 px-2 py-1 text-sm rounded-md hover:bg-red-900"
+                  >
+                    Delete
+                  </button>
+                </td>
+              </tr>
+            ))}
         </tbody>
       </table>
     </div>

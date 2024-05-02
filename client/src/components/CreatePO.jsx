@@ -1,7 +1,30 @@
 import React, { useState } from "react";
 import { IoInformationCircleOutline } from "react-icons/io5";
+import { useQuery } from "@tanstack/react-query";
+import fetchData from "./customInstance";
 
 const CreatePurchaseOrder = () => {
+  const {
+    data: suppliers,
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: ["suppliers"],
+    queryFn: () => fetchData.get("/supplier/all"),
+  });
+
+  const supplierData = suppliers?.data;
+
+  const {
+    isPending,
+    data: products,
+    isError: productFetchError,
+  } = useQuery({
+    queryKey: ["products"],
+    queryFn: () => fetchData.get("/products"),
+  });
+  const productData = products?.data;
+
   // State to hold form data
   const [formData, setFormData] = useState({
     supplier: "",
@@ -64,8 +87,17 @@ const CreatePurchaseOrder = () => {
               required
             >
               <option value="">Select Supplier</option>
-              <option value="Supplier A">Supplier A</option>
-              <option value="Supplier B">Supplier B</option>
+              {supplierData &&
+                supplierData.map((supplier) => {
+                  return (
+                    <option
+                      key={supplier.supplierCode}
+                      value={supplier.supplierCode}
+                    >
+                      {supplier.name.toUpperCase()}
+                    </option>
+                  );
+                })}
             </select>
           </label>
           <label className="block">
@@ -78,8 +110,15 @@ const CreatePurchaseOrder = () => {
               required
             >
               <option value="">Select Product</option>
-              <option value="Product 1">Product 1</option>
-              <option value="Product 2">Product 2</option>
+              {productData &&
+                productData.map((product) => {
+                  return (
+                    <option key={product.productID} value={product.productID}>
+                      {" "}
+                      {product.productID} - {product.productName}
+                    </option>
+                  );
+                })}
             </select>
           </label>
           <label className="block">

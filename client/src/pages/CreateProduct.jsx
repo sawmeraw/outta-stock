@@ -1,11 +1,16 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { IoCaretBackOutline } from "react-icons/io5";
+import fetchData from "../components/customInstance";
+import { toast } from "react-toastify";
+import { useQuery } from "@tanstack/react-query";
 
 const CreateProduct = () => {
   const [product, setProduct] = useState({
     brand: "",
+    productID: "",
     productName: "",
+    supplier: "",
     productColor: "",
     sku: "",
     costPrice: "",
@@ -18,6 +23,16 @@ const CreateProduct = () => {
       { sku: "", size: "" },
     ],
   });
+  const navigate = useNavigate();
+
+  const {
+    data: suppliers,
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: ["suppliers"],
+    queryFn: () => fetchData.get("/supplier/all"),
+  });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -28,10 +43,10 @@ const CreateProduct = () => {
   };
 
   const handleVariantChange = (e) => {
-    const { checked } = e.target;
+    const { checked: trueVariants } = e.target;
     setProduct((prevState) => ({
       ...prevState,
-      variants: checked,
+      variants: trueVariants,
     }));
   };
 
@@ -46,8 +61,43 @@ const CreateProduct = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Product details:", product);
+
+    const createNewProduct = async () => {
+      try {
+        const response = await fetchData.post("/newproduct", product);
+        if (response.data.success) {
+          setProduct({
+            brand: "",
+            productID: "",
+            productName: "",
+            supplier: "",
+            productColor: "",
+            sku: "",
+            costPrice: "",
+            retailPrice: "",
+            salePrice: "",
+            variants: false,
+            variantDetails: [
+              { sku: "", size: "" },
+              { sku: "", size: "" },
+              { sku: "", size: "" },
+            ],
+          });
+        }
+        toast.success("Product created successfully", {
+          autoClose: 1500,
+        });
+        navigate("/management");
+      } catch (error) {
+        toast.error("Error creating product");
+        navigate("/management");
+        console.error(error);
+      }
+    };
+    createNewProduct();
   };
+
+  const supplierData = suppliers?.data;
 
   return (
     <div className="container mx-auto p-4">
@@ -69,6 +119,19 @@ const CreateProduct = () => {
             onChange={handleChange}
             className="mt-1 block w-full p-2 border rounded"
             placeholder="Brand"
+            required
+          />
+        </label>
+        <label className="block">
+          <span className="text-gray-700">Product ID</span>
+          <input
+            type="text"
+            name="productID"
+            value={product.productID}
+            onChange={handleChange}
+            className="mt-1 block w-full p-2 border rounded"
+            placeholder="ProductID"
+            required
           />
         </label>
         <label className="block">
@@ -80,7 +143,31 @@ const CreateProduct = () => {
             onChange={handleChange}
             className="mt-1 block w-full p-2 border rounded"
             placeholder="Product Name"
+            required
           />
+        </label>
+        <label className="block">
+          <span className="text-gray-700">Supplier</span>
+          <select
+            type="text"
+            name="supplier"
+            value={product.supplier}
+            onChange={handleChange}
+            className="mt-1 block w-full p-2 border rounded"
+            placeholder="Supplier"
+            required
+          >
+            <option value=""></option>
+            {supplierData &&
+              supplierData.map((supplier) => {
+                return (
+                  <option key={supplier.name} value={supplier.name}>
+                    {supplier.name.toUpperCase()} -{" "}
+                    {supplier.supplierCode.toUpperCase()}
+                  </option>
+                );
+              })}
+          </select>
         </label>
         <label className="block">
           <span className="text-gray-700">Product Color</span>
@@ -91,6 +178,7 @@ const CreateProduct = () => {
             onChange={handleChange}
             className="mt-1 block w-full p-2 border rounded"
             placeholder="Product Color"
+            required
           />
         </label>
         <label className="block">
@@ -102,6 +190,7 @@ const CreateProduct = () => {
             onChange={handleChange}
             className="mt-1 block w-full p-2 border rounded"
             placeholder="SKU"
+            required
           />
         </label>
         <label className="block">
@@ -113,6 +202,7 @@ const CreateProduct = () => {
             onChange={handleChange}
             className="mt-1 block w-full p-2 border rounded"
             placeholder="Cost Price"
+            required
           />
         </label>
         <label className="block">
@@ -124,6 +214,7 @@ const CreateProduct = () => {
             onChange={handleChange}
             className="mt-1 block w-full p-2 border rounded"
             placeholder="Retail Price"
+            required
           />
         </label>
         <label className="block">
