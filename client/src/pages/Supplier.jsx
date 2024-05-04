@@ -3,10 +3,15 @@ import { Link } from "react-router-dom";
 import { IoCaretBackOutline } from "react-icons/io5";
 import { toast } from "react-toastify";
 import fetchData from "../components/customInstance";
-import { useMutation, useQuery, QueryClient } from "@tanstack/react-query";
+import {
+  useMutation,
+  useQuery,
+  QueryClient,
+  useQueryClient,
+} from "@tanstack/react-query";
 
 const Supplier = () => {
-  const queryClient = new QueryClient();
+  const queryClient = useQueryClient();
   const {
     data: suppliers,
     isLoading: fetchingAllSuppliers,
