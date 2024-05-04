@@ -18,6 +18,10 @@ const PO = () => {
       name: "Receive",
       path: "receive",
     },
+    {
+      name: "Invoices",
+      path: "invoices",
+    },
   ];
 
   return (

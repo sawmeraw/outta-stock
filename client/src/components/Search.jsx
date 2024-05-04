@@ -1,15 +1,14 @@
-import React, { useState } from "react";
+import React, { useCallback } from "react";
+import { useSearch } from "./SearchContext";
 
-const Search = ({ onSearch }) => {
-  const [searchTerm, setSearchTerm] = useState("");
-
-  const handleInputChange = (e) => {
-    setSearchTerm(e.target.value);
-  };
+const Search = () => {
+  const { handleSearchChange, searchTerm } = useSearch();
 
   const handleFormSubmit = (e) => {
     e.preventDefault();
-    onSearch(searchTerm);
+    const formData = new FormData(e.target);
+    const term = formData.get("search");
+    handleSearchChange(e.target[0]);
   };
 
   return (
@@ -18,8 +17,7 @@ const Search = ({ onSearch }) => {
         <input
           type="text"
           placeholder="Search..."
-          value={searchTerm}
-          onChange={handleInputChange}
+          name="search"
           className="flex-grow p-2 border rounded-l-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
         />
         <button

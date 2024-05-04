@@ -4,6 +4,7 @@ import {
   PurchaseOrders,
   CreatePO,
   ReceivePO,
+  Invoices,
 } from "./components";
 import {
   Products,
@@ -38,6 +39,7 @@ function App() {
                 <Route path="orders" index element={<PurchaseOrders />} />
                 <Route path="create" element={<CreatePO />} />
                 <Route path="receive" element={<ReceivePO />} />
+                <Route path="invoices" element={<Invoices />} />
               </Route>
               <Route path="/about" element={<About />} />
               <Route path="/inventory/:id" element={<Inventory />} />

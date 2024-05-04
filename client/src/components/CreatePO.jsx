@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { IoInformationCircleOutline } from "react-icons/io5";
 import { useQuery } from "@tanstack/react-query";
 import fetchData from "./customInstance";
+import { toast } from "react-toastify";
 
 const CreatePurchaseOrder = () => {
   const {
@@ -25,11 +26,10 @@ const CreatePurchaseOrder = () => {
   });
   const productData = products?.data;
 
-  // State to hold form data
   const [formData, setFormData] = useState({
     supplier: "",
     invoiceNumber: "",
-    productName: "",
+    productID: "",
     quantity: "",
     cost: "",
     chargeDate: "",
@@ -38,7 +38,6 @@ const CreatePurchaseOrder = () => {
     expectedDelivery: "",
   });
 
-  // Handle change in input fields
   const handleChange = (event) => {
     const { name, value } = event.target;
     setFormData((prevState) => ({
@@ -47,12 +46,32 @@ const CreatePurchaseOrder = () => {
     }));
   };
 
-  // Handle form submission
   const handleSubmit = (event) => {
     event.preventDefault();
-    console.log("Form Data Submitted:", formData);
-    // Here you would typically handle the backend API submission
-    alert("Purchase Order Created Successfully!");
+    const submitPO = async () => {
+      try {
+        const response = await fetchData.post("/po/create", formData);
+        if (response.data.success) {
+          console.log("PO created successfully");
+          toast.success("Purchase Order created successfully");
+        }
+      } catch (error) {
+        console.log("Error creating PO", error);
+        toast.error("Failed to create Purchase Order");
+      }
+    };
+    submitPO();
+    setFormData({
+      supplier: "",
+      invoiceNumber: "",
+      productID: "",
+      quantity: "",
+      cost: "",
+      chargeDate: "",
+      dueDate: "",
+      initials: "",
+      expectedDelivery: "",
+    });
   };
 
   return (
@@ -103,8 +122,8 @@ const CreatePurchaseOrder = () => {
           <label className="block">
             <span className="text-gray-700">Product Name</span>
             <select
-              name="productName"
-              value={formData.productName}
+              name="productID"
+              value={formData.productID}
               onChange={handleChange}
               className="mt-1 block w-full p-2 border rounded"
               required

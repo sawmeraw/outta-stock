@@ -5,3 +5,4 @@ export { default as ProductList } from "./ProductList.jsx";
 export { default as CreatePO } from "./CreatePO.jsx";
 export { default as ReceivePO } from "./ReceivePO.jsx";
 export { default as PurchaseOrders } from "./PurchaseOrders.jsx";
+export { default as Invoices } from "./Invoices.jsx";

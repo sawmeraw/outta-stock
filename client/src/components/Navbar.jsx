@@ -17,25 +17,18 @@ const Navbar = () => {
           <div className="flex justify-between gap-8">
             {links.map((link) => {
               return (
-                <>
-                  <Link
-                    key={link}
-                    to={`/${link}`}
-                    className={` ${
-                      page == link ? "bg-slate-500 font-semibold" : ""
-                    } hover:text-gray-300 capitalize px-2 rounded-md py-2`}
-                    onClick={() => setPage(link)}
-                  >
-                    {link}
-                  </Link>
-                </>
+                <Link
+                  key={link}
+                  to={`/${link}`}
+                  className={` ${
+                    page == link ? "bg-slate-500 font-semibold" : ""
+                  } hover:text-gray-300 capitalize px-2 rounded-md py-2`}
+                  onClick={() => setPage(link)}
+                >
+                  {link}
+                </Link>
               );
             })}
-          </div>
-          <div className="flex justify-end">
-            <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-              Sign In
-            </button>
           </div>
         </div>
       </nav>

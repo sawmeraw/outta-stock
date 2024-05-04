@@ -1,42 +1,22 @@
 import React from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { QueryClient, useMutation, useQuery } from "@tanstack/react-query";
-import fetchData from "./customInstance";
-import { toast } from "react-toastify";
+import { Link } from "react-router-dom";
+import { useSearch } from "./SearchContext";
 
 const ProductList = () => {
-  const queryClient = new QueryClient();
-  const navigate = useNavigate();
-  const { isPending, data, isError } = useQuery({
-    queryKey: ["products"],
-    queryFn: () => fetchData.get("/products"),
-  });
-  const products = data?.data;
-
-  const { mutate: deleteProduct, isLoading } = useMutation({
-    mutationFn: (id) => fetchData.delete(`/deleteproduct/${id}`),
-    onSuccess: () => {
-      toast.success("Product deleted successfully", {
-        autoClose: 1500,
-      });
-      queryClient.invalidateQueries(["products"]);
-    },
-    onError: () => {
-      toast.error("Error deleting product");
-    },
-  });
+  const { results, isLoading: searchLoading, deleteProduct } = useSearch();
 
   const onDelete = (id) => {
     deleteProduct(id);
   };
 
   //Remaining: To Add loading and error state renders
+  const activeProducts = results?.filter((product) => !product.deleted);
 
   return (
     <div className="max-w-4xl mx-auto mt-8">
       <h2 className="text-xl font-semibold mb-4 text-left">All Products</h2>
       <p className="text-right text-sm text-orange-800 mb-4">
-        Showing 20 out of 100 products
+        Showing {results.length} products
       </p>
       <table className="table-auto w-full">
         <thead className="bg-gray-200">
@@ -51,8 +31,18 @@ const ProductList = () => {
           </tr>
         </thead>
         <tbody>
-          {products &&
-            products.map((product) => (
+          {results && results.length === 0 && (
+            <tr className="">
+              <td
+                colSpan="7"
+                className="text-center py-4 uppercase text-red-500"
+              >
+                No products found
+              </td>
+            </tr>
+          )}
+          {activeProducts &&
+            activeProducts.map((product) => (
               <tr key={product.productID}>
                 <td className="border px-4 py-2 ">
                   <Link

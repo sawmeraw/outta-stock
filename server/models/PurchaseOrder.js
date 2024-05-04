@@ -12,20 +12,27 @@ let PurchaseOrderSchema = new Schema(
       type: String,
       required: [true, "Name is required"],
     },
-    orderDate: {
+    createdOn: {
+      type: Date,
+      default: Date.now,
+    },
+    chargeDate: {
       type: Date,
       required: [true, "Order Date is required"],
+    },
+    initials: {
+      type: String,
     },
     dueDate: {
       type: Date,
       required: [true, "Due Date is required"],
     },
     quantity: {
-      type: Number,
+      type: String,
       required: [true, "Quantity is required"],
     },
     cost: {
-      type: Number,
+      type: String,
       required: [true, "Cost is required"],
     },
     invoiceNumber: {
@@ -43,6 +50,10 @@ let PurchaseOrderSchema = new Schema(
     status: {
       type: String,
       default: "Pending",
+    },
+    paid: {
+      type: Boolean,
+      default: false,
     },
     cancelled: {
       type: Boolean,

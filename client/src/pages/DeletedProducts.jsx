@@ -1,17 +1,16 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { IoCaretBackOutline } from "react-icons/io5";
-import { QueryClient, useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import fetchData from "../components/customInstance";
 import { toast } from "react-toastify";
 
 const DeletedProductsPage = () => {
-  const queryClient = new QueryClient();
   const { data, isPending, isError } = useQuery({
     queryKey: ["deletedProducts"],
     queryFn: () => fetchData.get("/products/deleted"),
   });
-
+  const queryClient = useQueryClient();
   const { mutate: restoreProduct, isLoading } = useMutation({
     mutationFn: (id) => fetchData.patch(`/products/deleted/restore/${id}`),
     onSuccess: () => {
@@ -72,6 +71,16 @@ const DeletedProductsPage = () => {
           </tr>
         </thead>
         <tbody>
+          {deletedProducts && deletedProducts.length === 0 && (
+            <tr className="hover:bg-gray-100">
+              <td
+                colSpan="4"
+                className="text-center py-4 uppercase text-red-500"
+              >
+                No deleted products
+              </td>
+            </tr>
+          )}
           {deletedProducts &&
             deletedProducts.map((product) => (
               <tr key={product.productID} className="hover:bg-gray-100">

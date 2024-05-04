@@ -7,13 +7,16 @@ let ProductSchema = new Schema(
     brand: {
       type: String,
       required: [true, "Brand is required"],
+      index: true,
     },
     productID: {
       type: String,
+      index: true,
       required: [true, "Product ID is required"],
     },
     productName: {
       type: String,
+      index: true,
       required: [true, "Name is required"],
     },
     supplier: {
@@ -77,6 +80,12 @@ ProductSchema.pre("save", function (next) {
     this.sale = this.price;
   }
   next();
+});
+
+ProductSchema.index({
+  brand: "text",
+  productName: "text",
+  productID: "text",
 });
 
 const Product = mongoose.model("Product", ProductSchema);
