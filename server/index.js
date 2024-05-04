@@ -9,7 +9,12 @@ const PurchaseOrder = require("./models/PurchaseOrder");
 const Invoice = require("./models/Invoices");
 
 //CORS
-app.use(cors());
+app.use(
+  cors({
+    origin: "https://outta-stock.vercel.app",
+    credentials: true,
+  })
+);
 
 //Middleware
 app.use(express.json());
