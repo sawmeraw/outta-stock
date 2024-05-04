@@ -8,16 +8,15 @@ const Supplier = require("./models/Supplier");
 const PurchaseOrder = require("./models/PurchaseOrder");
 const Invoice = require("./models/Invoices");
 
+//Middleware
+app.use(express.json());
+
 //CORS
 app.use(
   cors({
     origin: "https://outta-stock.vercel.app",
-    credentials: true,
   })
 );
-
-//Middleware
-app.use(express.json());
 
 const PORT = process.env.PORT || 5000;
 
