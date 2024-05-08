@@ -33,10 +33,11 @@ function App() {
           <Navbar />
           <main className="flex-grow">
             <Routes>
-              <Route path="/products" index element={<Products />} />
+              <Route exact path="/" index element={<Products />} />
+              <Route exact path="/products" index element={<Products />} />
               <Route path="/management" element={<Management />} />
               <Route path="/po" element={<PO />}>
-                <Route path="orders" index element={<PurchaseOrders />} />
+                <Route index element={<PurchaseOrders />} />
                 <Route path="create" element={<CreatePO />} />
                 <Route path="receive" element={<ReceivePO />} />
                 <Route path="invoices" element={<Invoices />} />

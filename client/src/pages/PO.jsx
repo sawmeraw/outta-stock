@@ -3,12 +3,12 @@ import { Routes, Route, Link, Outlet } from "react-router-dom";
 import { IoCaretBackOutline } from "react-icons/io5";
 
 const PO = () => {
-  const [outlet, setOutlet] = useState("orders");
+  const [outlet, setOutlet] = useState("");
 
   const links = [
     {
       name: "Purchase Orders",
-      path: "orders",
+      path: "",
     },
     {
       name: "Create",

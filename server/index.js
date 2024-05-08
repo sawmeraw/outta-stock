@@ -12,6 +12,7 @@ const Invoice = require("./models/Invoices");
 app.use(express.json());
 
 //CORS
+// app.use(cors());
 app.use(
   cors({
     origin: "https://outta-stock.vercel.app",
